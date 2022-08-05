@@ -20,7 +20,7 @@ var (
 
 type myFramePacker struct{}
 
-func NewMyFrameCodec() StreamFramePacker {
+func NewMyFramePacker() StreamFramePacker {
 	return &myFramePacker{}
 }
 
