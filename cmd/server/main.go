@@ -49,7 +49,11 @@ func run() {
 // write ack frame to conn
 
 func handlerConn(c net.Conn) {
-	defer c.Close()
+	metrics.ClientConnected.Inc()
+	defer func() {
+		metrics.ClientConnected.Dec()
+		c.Close()
+	}()
 
 	framePacker := frame.NewMyFramePacker()
 
