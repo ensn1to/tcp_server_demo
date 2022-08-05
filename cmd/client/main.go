@@ -13,7 +13,7 @@ import (
 
 func main() {
 	var wg sync.WaitGroup
-	var num int = 5
+	var num int = 100
 
 	wg.Add(num)
 	for i := 0; i < num; i++ {
