@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/ensn1to/tcp_server_demo/frame"
+	"github.com/ensn1to/tcp_server_demo/metrics"
 	"github.com/ensn1to/tcp_server_demo/packet"
 )
 
@@ -53,11 +54,15 @@ func handlerConn(c net.Conn) {
 	framePacker := frame.NewMyFramePacker()
 
 	for {
+		// read frame from the connection
 		framePayload, err := framePacker.Unpack(c)
 		if err != nil {
 			fmt.Println("handlerConn error: ", err)
 			return
 		}
+
+		// add 1 recive request
+		metrics.ReqRecvTotal.Add(1)
 
 		ackFramePayload, err := handlePacket(framePayload)
 		if err != nil {
@@ -65,12 +70,15 @@ func handlerConn(c net.Conn) {
 			return
 		}
 
+		// write ack frame to the connetion
 		err = framePacker.Pack(c, ackFramePayload)
 		if err != nil {
 			fmt.Println("handleConn: framePacker pack error: ", err)
 			return
 		}
 
+		// add 1 response
+		metrics.RspSendTotal.Add(1)
 	}
 }
 
