@@ -14,7 +14,7 @@ totalLength(4)|data(n)
 
 | segment    | type   | size    | remark                  |
 | ---------- | ------ | ------- | ----------------------- |
-| `dataSize` | int32 | 4       | the size of `data` only |                       |
+| `dataSize` | int32 | 4       | the size of `data` only  |
 | `data`     | []byte | dynamic |                         |
 ```
 
@@ -27,4 +27,13 @@ totalLength(4)|data(n)
 | `commandId`| byte   | 1       | message type            |
 | `id`       | int64  | 8       | message id              |
 | `payload`  | []byte | dynamic |                         |
+```
+
+
+### How to use it 
+
+```
+$ make
+$ ./server
+$ ./client
 ```
