@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,6 +17,9 @@ import (
 func main() {
 	run()
 
+	go func() {
+		http.ListenAndServe(":6060", nil)
+	}()
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGTERM|syscall.SIGINT)
 	<-c
