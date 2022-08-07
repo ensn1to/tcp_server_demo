@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 	"net/http"
@@ -62,10 +63,12 @@ func handlerConn(c net.Conn) {
 	}()
 
 	framePacker := frame.NewMyFramePacker()
+	rbf := bufio.NewReader(c)
+	wbf := bufio.NewWriter(c)
 
 	for {
 		// read frame from the connection
-		framePayload, err := framePacker.Unpack(c)
+		framePayload, err := framePacker.Unpack(rbf)
 		if err != nil {
 			fmt.Println("handlerConn error: ", err)
 			return
@@ -81,7 +84,7 @@ func handlerConn(c net.Conn) {
 		}
 
 		// write ack frame to the connetion
-		err = framePacker.Pack(c, ackFramePayload)
+		err = framePacker.Pack(wbf, ackFramePayload)
 		if err != nil {
 			fmt.Println("handleConn: framePacker pack error: ", err)
 			return
