@@ -52,6 +52,7 @@ func (log *ElkLogger) Infof(format string, args ...interface{}) {
 		fmt.Println("elk msg marshal error")
 		return
 	}
+	fmt.Println("Infof", msg)
 	log.Logger.Write(string(bytes))
 }
 

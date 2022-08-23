@@ -14,12 +14,19 @@ type LogStash struct {
 }
 
 func newLogStash(hostname string, port int, timeout int) *LogStash {
-	return &LogStash{
+	ls := &LogStash{
 		hostname: hostname,
 		port:     port,
 		Conn:     nil,
 		TimeOut:  timeout,
 	}
+	var err error
+	ls.Conn, err = ls.Connect()
+	if err != nil {
+		panic(err)
+	}
+
+	return ls
 }
 
 func (l *LogStash) Connect() (*net.TCPConn, error) {
@@ -53,6 +60,7 @@ func (l *LogStash) setTimeouts() {
 func (l *LogStash) Write(message string) (err error) {
 	message = fmt.Sprintf("%s\n", message)
 	if l.Conn != nil {
+		fmt.Printf("write message: %s\n", message)
 		_, err = l.Conn.Write([]byte(message))
 		if err != nil {
 			l.Connect()

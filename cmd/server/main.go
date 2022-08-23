@@ -38,12 +38,12 @@ func run() {
 		panic(err)
 	}
 
-	fmt.Println("server running...")
+	elk.Logger.Infof("server running...")
 
 	for {
 		c, err := l.Accept()
 		if err != nil {
-			fmt.Println("accept error: ", err)
+			elk.Logger.Errorf("accept error: ", err)
 			break
 		}
 
@@ -75,7 +75,7 @@ func handlerConn(c net.Conn) {
 		// read frame from the connection
 		framePayload, err := framePacker.Unpack(rbf)
 		if err != nil {
-			fmt.Println("handlerConn error: ", err)
+			elk.Logger.Errorf("handlerConn error: ", err)
 			return
 		}
 
@@ -84,14 +84,14 @@ func handlerConn(c net.Conn) {
 
 		ackFramePayload, err := handlePacket(framePayload)
 		if err != nil {
-			fmt.Println("handleConn: handlePacket error: ", err)
+			elk.Logger.Errorf("handleConn: handlePacket error: ", err)
 			return
 		}
 
 		// write ack frame to the connetion
 		err = framePacker.Pack(wbf, ackFramePayload)
 		if err != nil {
-			fmt.Println("handleConn: framePacker pack error: ", err)
+			elk.Logger.Errorf("handleConn: framePacker pack error: ", err)
 			return
 		}
 
@@ -104,7 +104,7 @@ func handlePacket(framePayload []byte) (ackFramePayload []byte, err error) {
 	var p packet.Packet
 	p, err = packet.Decode(framePayload)
 	if err != nil {
-		fmt.Println("handleConn: packet decode error: ", err)
+		elk.Logger.Errorf("handleConn: packet decode error: ", err)
 		return
 	}
 
@@ -119,7 +119,7 @@ func handlePacket(framePayload []byte) (ackFramePayload []byte, err error) {
 		packet.SubmitPool.Put(submit) // 将submit对象归还给Pool池
 		ackFramePayload, err = packet.Encode(submitAck)
 		if err != nil {
-			fmt.Println("handleConn: packet encode error:", err)
+			elk.Logger.Errorf("handleConn: packet encode error:", err)
 			return nil, err
 		}
 		return ackFramePayload, nil
