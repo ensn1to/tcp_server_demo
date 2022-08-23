@@ -12,8 +12,13 @@ import (
 
 	"github.com/ensn1to/tcp_server_demo/frame"
 	"github.com/ensn1to/tcp_server_demo/metrics"
+	"github.com/ensn1to/tcp_server_demo/middleware/elk"
 	"github.com/ensn1to/tcp_server_demo/packet"
 )
+
+func init() {
+	elk.Logger = elk.NewElkLogger("101.43.84.106", 4560, 10)
+}
 
 func main() {
 	go func() {
@@ -106,7 +111,7 @@ func handlePacket(framePayload []byte) (ackFramePayload []byte, err error) {
 	switch p.(type) {
 	case *packet.Submit:
 		submit := p.(*packet.Submit)
-		fmt.Printf("recv submit: id = %s, payload=%s\n", submit.ID, string(submit.Payload))
+		elk.Logger.Infof("recv submit: id = %s, payload=%s\n", submit.ID, string(submit.Payload))
 		submitAck := &packet.SubmitAck{
 			ID:     submit.ID,
 			Result: 0,
