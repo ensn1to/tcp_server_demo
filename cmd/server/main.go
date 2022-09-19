@@ -10,30 +10,47 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/ensn1to/tcp_server_demo/config"
 	"github.com/ensn1to/tcp_server_demo/frame"
 	"github.com/ensn1to/tcp_server_demo/metrics"
 	"github.com/ensn1to/tcp_server_demo/middleware/elk"
 	"github.com/ensn1to/tcp_server_demo/packet"
+	"github.com/spf13/viper"
 )
 
 func init() {
-	elk.Logger = elk.NewElkLogger("101.43.84.106", 4560, 10)
+	elk.Logger = elk.NewElkLogger("127.0.0.1", 4560, 10)
 }
 
 func main() {
+	cfg := prepareRun()
 	go func() {
-		http.ListenAndServe(":6060", nil)
+		http.ListenAndServe(cfg.HttpAddr, nil)
 	}()
 
-	run()
+	run(cfg.TcpAddr)
 
 	c := make(chan os.Signal)
 	signal.Notify(c, syscall.SIGTERM|syscall.SIGINT)
 	<-c
 }
 
-func run() {
-	l, err := net.Listen("tcp", ":8888")
+func prepareRun() *config.Config {
+	config.ReadFromFile()
+
+	serverMode := viper.GetString("server.mode")
+	fmt.Println("serverMode:", serverMode)
+
+	c, err := config.ReadFromConsul(serverMode)
+	if err != nil {
+		panic(err)
+	}
+
+	return c
+}
+
+func run(addr string) {
+	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
