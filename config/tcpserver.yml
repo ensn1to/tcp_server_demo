@@ -1,2 +1,2 @@
 server:
-  mode: test
+  mode: dev

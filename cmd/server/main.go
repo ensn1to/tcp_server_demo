@@ -19,7 +19,7 @@ import (
 )
 
 func init() {
-	elk.Logger = elk.NewElkLogger("127.0.0.1", 4560, 10)
+	elk.Logger = elk.NewElkLogger("192.168.0.223", 4560, 10)
 }
 
 func main() {
@@ -36,12 +36,12 @@ func main() {
 }
 
 func prepareRun() *config.Config {
-	config.ReadFromFile()
+	config.ReadFromEnv()
 
-	serverMode := viper.GetString("server.mode")
-	fmt.Println("serverMode:", serverMode)
+	serverMode := viper.GetString("ServerMode")
+	consulAddr := viper.GetString("ConsulAddr")
 
-	c, err := config.ReadFromConsul(serverMode)
+	c, err := config.ReadFromConsul(consulAddr, serverMode)
 	if err != nil {
 		panic(err)
 	}

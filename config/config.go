@@ -20,11 +20,11 @@ func ReadFromEnv() {
 // 从配置文件中读取
 func ReadFromFile() {
 	viper.AddConfigPath(".")
-	viper.AddConfigPath("./config")
+	viper.AddConfigPath("../../config")
 	viper.SetConfigName("tcpserver") // 配置文件名称
 
 	if err := viper.ReadInConfig(); err != nil {
-		panic("Fatal error config")
+		panic(err)
 	}
 
 	fmt.Println("Used cfg file is:", viper.ConfigFileUsed())
@@ -39,8 +39,8 @@ func HotReadCfg() {
 	})
 }
 
-func ReadFromConsul(serverMode string) (*Config, error) {
-	viper.AddRemoteProvider("consul", "localhost:8500", serverMode)
+func ReadFromConsul(consulAddr, serverMode string) (*Config, error) {
+	viper.AddRemoteProvider("consul", consulAddr, serverMode)
 	viper.SetConfigType("json")
 	err := viper.ReadRemoteConfig()
 	if err != nil {

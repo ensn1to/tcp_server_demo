@@ -60,7 +60,7 @@ func (l *LogStash) setTimeouts() {
 func (l *LogStash) Write(message string) (err error) {
 	message = fmt.Sprintf("%s\n", message)
 	if l.Conn != nil {
-		fmt.Printf("write message: %s\n", message)
+		// fmt.Printf("write message: %s\n", message)
 		_, err = l.Conn.Write([]byte(message))
 		if err != nil {
 			l.Connect()
