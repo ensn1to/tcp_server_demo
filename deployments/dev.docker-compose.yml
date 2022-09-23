@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  server:
+    # SERVER_MODE="dev"方式在viper调用AddRemoteProvider会错误除解析其他的信息
+    # 错误信息" server  | ERROR 2022/09/23 08:33:13 get remote config: Get "http://\"192.168.0.223:8500\"/v1/kv/%!p(MISSING)rod%!"(MISSING): dial tcp: lookup "192.168.0.223:8500": no such host
+    environment:
+      - SERVER_MODE=dev
+      - CONSUL_ADDR=192.168.0.223:8500

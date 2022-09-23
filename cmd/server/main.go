@@ -38,8 +38,8 @@ func main() {
 func prepareRun() *config.Config {
 	config.ReadFromEnv()
 
-	serverMode := viper.GetString("ServerMode")
-	consulAddr := viper.GetString("ConsulAddr")
+	serverMode := viper.GetString("SERVER_MODE")
+	consulAddr := viper.GetString("CONSUL_ADDR")
 
 	c, err := config.ReadFromConsul(consulAddr, serverMode)
 	if err != nil {

@@ -7,4 +7,23 @@ client: cmd/client/main.go
 
 clean:
 	rm -fr ./server
-	rm -fr ./client
+	rm -fr ./client	
+	docker stop server
+	docker rm server
+	docker rmi server
+
+devdownv:
+	docker-compose -f ./deployments/docker-compose.yml  down -v
+
+dev:
+	docker-compose -f ./deployments/docker-compose.yml -f ./deployments/dev.docker-compose.yml up
+
+prod:
+	docker-compose -f ./deployments/docker-compose.yml -f ./deployments/prod.docker-compose.yml up -d
+
+
+logs:
+	docker-compose  -f ./deployments/docker-compose.yml logs -f
+
+ps:
+	docker-compose ps
