@@ -3,4 +3,4 @@ services:
   server:
     environment:
       - SERVER_MODE=prod
-      - CONSUL_ADDR=192.168.0.223:8500
+      - CONSUL_ADDR=$PRO_CONSUL_ADDR
